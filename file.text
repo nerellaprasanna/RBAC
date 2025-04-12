@@ -1,23 +1,333 @@
-This is the code
-The sign up page
+package com.taskcheck.vikrayon;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class VikrayonApplication {
+
+ public static void main(String[] args) {
+		SpringApplication.run(VikrayonApplication.class, args);
+	}
+
+}
+
+////////////////////////////
+
+package com.taskcheck.vikrayon.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.taskcheck.vikrayon.model.VikrayaUser;
+import com.taskcheck.vikrayon.repository.UserRepository;
+
+
+
+@RestController
+@RequestMapping("/home")
+public class UserController {
+	
+	@Autowired
+	private UserRepository userRepository;
+		
+	@PostMapping("/register")
+	public ResponseEntity<String> postUser(@RequestBody VikrayaUser user){
+		userRepository.save(user);
+		System.out.println(user.toString());
+		return ResponseEntity.ok("registered");
+	}
+	
+	@GetMapping("/register")
+	public List<VikrayaUser> getUser(){
+		System.out.println(userRepository.findAll() + "checking");
+		return userRepository.findAll();
+	}
+}
+
+
+	///////////////////
+
+ package com.taskcheck.vikrayon.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.taskcheck.vikrayon.model.VikrayaUser;
+
+@Repository
+public interface UserRepository extends JpaRepository<VikrayaUser, Long> {
+
+}
+
+/////////////////
+
+
+package com.taskcheck.vikrayon.model;
+
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Entity
+public class VikrayaUser {
+
+	 private static final String Confirmpassword = "12345";
+
+	private static final String Forgetpassword = "12345";
+
+	@Id
+	 @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vikraya_seq")
+	    @SequenceGenerator(name = "vikraya_seq", sequenceName = "vikraya_seq", allocationSize = 1)
+	    private Long id;
+	 
+	    private String Username;
+	    private String Email;
+	    private String Password;
+	 	 private String Phone;
+	  
+	 
+	    @Enumerated(EnumType.STRING)
+	    private Role role;
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public String getUsername() {
+			return Username;
+		}
+
+		public void setUsername(String username) {
+			Username = username;
+		}
+
+		public String getEmail() {
+			return Email;
+		}
+
+		public void setEmail(String email) {
+			Email = email;
+		}
+
+		public String getPassword() {
+			return Password;
+		}
+
+		public void setPassword(String password) {
+			Password = password;
+		}
+		public String getConfirmpassword() {
+			return Confirmpassword;
+		}
+		public void setConfirmpassword( String Confirmpassword) {
+			 Confirmpassword = Confirmpassword;
+		}
+
+		public String getPhone() {
+			return Phone;
+		}
+
+		public void setPhone(String phone) {
+			Phone = phone;
+		}
+
+		public Role getSignup() {
+			return role;
+		}
+
+		public void setsignup(Role Signup) {
+			this.role = Signup;
+		}
+		public String setForgetpassword() {
+		return  Forgetpassword;
+}
+          
+		
+
+		@Override
+		public String toString() {
+			return "VikrayaUser [id=" + id + ", Username=" + Username + ", Email=" + Email + ", Password=" + Password
+					+ ", Phone=" + Phone + ", role=" + role + "]";
+		}
+	    
+	    
+	    
+}
+enum Role {
+    USER,
+    VENDOR,
+}
+
+
+///////////////////
+
+package com.taskcheck.vikrayon;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class VikrayonApplication {
+
+ public static void main(String[] args) {
+		SpringApplication.run(VikrayonApplication.class, args);
+	}
+
+}
+
+
+//////////////////////
+
+
+# DB Connection
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521:xe
+spring.datasource.username=system
+spring.datasource.password=prasanna
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+
+# JPA settings
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# Thymeleaf settings
+spring.thymeleaf.cache=false
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.suffix=.html
+
+# Server port
+server.port =9090
+/////////////////////////////////////////////////////////////////
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.4.4</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.taskcheck</groupId>
+	<artifactId>vikrayon</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>vikrayon</name>
+	<description>this is for testing</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+	<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc11</artifactId>
+			<scope>runtime</scope>
+	</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+
+
+
+///POSTMAN
+
+
+[{"id":1,"password":null,"username":null,"phone":null,"signup":null,"email":null,"confirmpassword":null},{"id":2,"password":null,"username":null,"phone":null,"signup":null,"email":null,"confirmpassword":null},{"id":3,"password":null,"username":null,"phone":null,"signup":null,"email":null,"confirmpassword":null},{"id":4,"password":null,"username":null,"phone":null,"signup":null,"email":null,"confirmpassword":null},{"id":5,"password":null,"username":null,"phone":null,"signup":null,"email":null,"confirmpassword":null},{"id":6,"password":null,"username":null,"phone":null,"signup":null,"email":null,"confirmpassword":null},{"id":7,"password":null,"username":null,"phone":null,"signup":null,"email":null,"confirmpassword":null},{"id":8,"password":"abc","username":"test","phone":"123456","signup":null,"email":"abc@gmail.com","confirmpassword":null},{"id":9,"password":"abc","username":"test","phone":"123456","signup":null,"email":"abc@gmail.com","confirmpassword":null}]
 
 
 
 
-wq!
-wq!
-
-
-
-
-
-
-cd..
-cat file.text
-
-wq!
-wq!
-wq!
-wq!
-m      :q!
 
